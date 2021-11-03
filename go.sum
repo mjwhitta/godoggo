@@ -1,8 +1,8 @@
-gitlab.com/mjwhitta/cli v1.8.0/go.mod h1:0nzOLJZWsbgzJp/EQoLHcCLvKXX/iakyOZIqg94xAzo=
-gitlab.com/mjwhitta/hilighter v1.9.1 h1:YlUCB1jWYVtwwfQ4DFvwXULmvH3Bu9ELlTkS5+jzZgQ=
-gitlab.com/mjwhitta/hilighter v1.9.1/go.mod h1:/hkHOgezVQbk/eoif5CRCK2/N0aeEK40VQh8znGsjpE=
-gitlab.com/mjwhitta/log v1.4.2/go.mod h1:iOdtHoTqI7dSVZMazfnz8Ap5GPHNHkeuzzJO2DNAAYU=
-gitlab.com/mjwhitta/runsc v1.0.4 h1:/aoev7aZLBeyGToO/LuHoiNlkSmipTvuBmynjGr1ftY=
-gitlab.com/mjwhitta/runsc v1.0.4/go.mod h1:Ny3Y4fI1qx87M+ULrX8Fxiz9en8c7pSIIba0vBHMwYI=
-golang.org/x/sys v0.0.0-20201101102859-da207088b7d1 h1:a/mKvvZr9Jcc8oKfcmgzyp7OwF73JPWsQLvH1z2Kxck=
-golang.org/x/sys v0.0.0-20201101102859-da207088b7d1/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+gitlab.com/mjwhitta/cli v1.8.1/go.mod h1:mL238URUPKng2ISpF6z57S2OddeXnGx0R69E+UptRGE=
+gitlab.com/mjwhitta/hilighter v1.9.2 h1:PLzs5G6tRmlC8IKr44wJDDC+lwfRO0XaLnfLju44ibE=
+gitlab.com/mjwhitta/hilighter v1.9.2/go.mod h1:Lwt4SE0bvugjmFnA/vwzzARzn9VFSkqgoG8UXWgTaMI=
+gitlab.com/mjwhitta/log v1.4.4/go.mod h1:uJWssEB5YM0FoS6K5DG16Wfvq7qoC9GZMguHhLpW6Oo=
+gitlab.com/mjwhitta/runsc v1.1.2 h1:QnYd0OMUH7FtqR/Vg5sLnIVIzsEKNfKVaeeqrjIUQN0=
+gitlab.com/mjwhitta/runsc v1.1.2/go.mod h1:ggBpSsA5epEkGdNHah5lj3Vtn2WAVYyA55s7qAWjVo0=
+golang.org/x/sys v0.0.0-20211102192858-4dd72447c267 h1:7zYaz3tjChtpayGDzu6H0hDAUM5zIGA2XW7kRNgQ0jc=
+golang.org/x/sys v0.0.0-20211102192858-4dd72447c267/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

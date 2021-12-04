@@ -8,4 +8,8 @@ go%: havego
 	@go run ./tools/generator.go "$(BS)" "$(CS)" "$@" "$(SC)"
 
 superclean: clean
-	@rm -fr cmd/*
+ifeq ($(unameS),Windows)
+	$(foreach d,$(wildcard cmd/*),$(shell powershell -c Remove-Item -Force -Recurse $d))
+else
+	@rm -fr ./cmd/*
+endif

@@ -4,7 +4,7 @@ SC :=
 
 -include gomk/main.mk
 
-go%: havego
+go%:
 	@go run ./tools/generator.go "$(BS)" "$(CS)" "$@" "$(SC)"
 
 superclean: clean

@@ -12,12 +12,6 @@ import (
 )
 
 func init() {
-	defer func() {
-		if r := recover(); r != nil {
-			// Do nothing
-		}
-	}()
-
 	var e error
 	var g *gzip.Reader
 

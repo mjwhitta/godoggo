@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"compress/gzip"
 	"encoding/hex"
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -15,26 +14,57 @@ import (
 	"strings"
 )
 
-func copyFile(from string, to string) {
+func copyFile(from string, to string) error {
 	var b []byte
 	var e error
 	var f *os.File
 
 	// Read from file
-	b, e = ioutil.ReadFile(from)
-	if e != nil {
-		panic(e)
+	if b, e = ioutil.ReadFile(from); e != nil {
+		return e
 	}
 
 	// Create to file
 	if f, e = os.Create(to); e != nil {
-		panic(e)
+		return e
 	}
 
 	// Copy contents
 	if _, e = f.Write(b); e != nil {
-		panic(e)
+		return e
 	}
+
+	return nil
+}
+
+func copyTemplateFiles(name string) error {
+	var e error
+
+	e = copyFile(
+		filepath.Join("template", "main.go"),
+		filepath.Join("cmd", name, "main.go"),
+	)
+	if e != nil {
+		return e
+	}
+
+	e = copyFile(
+		filepath.Join("template", "first.go"),
+		filepath.Join("cmd", name, "0.go"),
+	)
+	if e != nil {
+		return e
+	}
+
+	e = copyFile(
+		filepath.Join("template", "last.go"),
+		filepath.Join("cmd", name, "z.go"),
+	)
+	if e != nil {
+		return e
+	}
+
+	return nil
 }
 
 func init() {
@@ -49,13 +79,7 @@ func init() {
 
 func main() {
 	var b []byte
-	var blocks int
-	var blocksize int
-	var chunksize int
 	var e error
-	var f *os.File
-	var footer string
-	var header string
 	var hexsc string
 	var name string
 	var r *regexp.Regexp
@@ -63,8 +87,6 @@ func main() {
 	var scFile string
 
 	// Store cli args
-	blocksize, _ = strconv.Atoi(flag.Arg(0))
-	chunksize, _ = strconv.Atoi(flag.Arg(1))
 	name = flag.Arg(2)
 	scFile = flag.Arg(3)
 
@@ -80,18 +102,9 @@ func main() {
 	os.MkdirAll(filepath.Join("cmd", name), os.ModePerm)
 
 	// Copy template files
-	copyFile(
-		filepath.Join("template", "main.go"),
-		filepath.Join("cmd", name, "main.go"),
-	)
-	copyFile(
-		filepath.Join("template", "first.go"),
-		filepath.Join("cmd", name, "0.go"),
-	)
-	copyFile(
-		filepath.Join("template", "last.go"),
-		filepath.Join("cmd", name, "z.go"),
-	)
+	if e = copyTemplateFiles(name); e != nil {
+		panic(e)
+	}
 
 	// Read scFile
 	if b, e = ioutil.ReadFile(scFile); e != nil {
@@ -120,18 +133,71 @@ func main() {
 		panic(e)
 	}
 
+	writeFiles(name, sc)
+}
+
+func nextFile(
+	f *os.File,
+	block int,
+	blocks int,
+	blocksize int,
+	path string,
+) (*os.File, error) {
+	var e error
+	var fn string
+	var fs string
+
+	// Close file
+	if f != nil {
+		if e = f.Close(); e != nil {
+			return nil, e
+		}
+	}
+
+	if blocks == 0 {
+		return nil, nil
+	}
+
+	// Get new filename
+	fs = "%0" + strconv.Itoa(len(strconv.Itoa(blocks))) + "d"
+	fn = fmt.Sprintf(fs, (block/blocksize)+1) + ".go"
+
+	// Open new file
+	if f, e = os.Create(filepath.Join(path, fn)); e != nil {
+		return nil, e
+	} else if f == nil {
+		return nil, fmt.Errorf("godoggo: failed to open file")
+	}
+
+	return f, nil
+}
+
+func writeFiles(name string, sc []byte) error {
+	var b []byte
+	var blocks int
+	var blocksize int
+	var chunksize int
+	var e error
+	var f *os.File
+	var footer string = "}\n"
+	var header string = strings.Join(
+		[]string{"package main", "", "func init() {", ""},
+		"\n",
+	)
+
+	// Get block and chunk size
+	if blocksize, e = strconv.Atoi(flag.Arg(0)); e != nil {
+		return e
+	}
+	if chunksize, e = strconv.Atoi(flag.Arg(1)); e != nil {
+		return e
+	}
+
 	// Determine number of blocks
 	blocks = len(sc) / blocksize
 	if (len(sc) % blocksize) != 0 {
 		blocks++
 	}
-
-	// Setup header and footer
-	footer = "}\n"
-	header = strings.Join(
-		[]string{"package main", "", "func init() {", ""},
-		"\n",
-	)
 
 	// Create numerous go files
 	b = []byte{}
@@ -146,13 +212,16 @@ func main() {
 			}
 
 			// Get next file
-			f = nextFile(
+			f, e = nextFile(
 				f,
 				i,
 				blocks,
 				blocksize,
 				filepath.Join("cmd", name),
 			)
+			if e != nil {
+				return e
+			}
 
 			// Write header
 			f.WriteString(header)
@@ -167,45 +236,11 @@ func main() {
 	// Write partial chunk
 	writeSC(b, f)
 	f.WriteString(footer)
-	nextFile(f, 0, 0, 0, "")
-}
-
-func nextFile(
-	f *os.File,
-	block int,
-	blocks int,
-	blocksize int,
-	path string,
-) *os.File {
-	var e error
-	var fn string
-	var fs string
-
-	// Close file
-	if f != nil {
-		if e = f.Close(); e != nil {
-			panic(e)
-		}
+	if _, e = nextFile(f, 0, 0, 0, ""); e != nil {
+		return e
 	}
 
-	if blocks == 0 {
-		return nil
-	}
-
-	// Get new filename
-	fs = "%0" + strconv.Itoa(len(strconv.Itoa(blocks))) + "d"
-	fn = fmt.Sprintf(fs, (block/blocksize)+1) + ".go"
-
-	// Open new file
-	f, e = os.Create(filepath.Join(path, fn))
-	if e != nil {
-		panic(e)
-	}
-	if f == nil {
-		panic(errors.New("Failed to open file"))
-	}
-
-	return f
+	return nil
 }
 
 func writeSC(b []byte, f *os.File) []byte {

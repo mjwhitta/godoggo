@@ -6,6 +6,7 @@ SC :=
 
 go%:
 	@go run ./tools/generator.go "$(BS)" "$(CS)" "$@" "$(SC)"
+	@go fmt ./...
 
 superclean: clean
 ifeq ($(unameS),Windows)

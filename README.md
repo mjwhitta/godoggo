@@ -27,7 +27,7 @@ Makefile but can be changed after your code has been generated.
 $ git clone https://gitlab.com/mjwhitta/godogo.git
 $ cd godoggo
 $ git submodule update --init
-$ make gocalc SC=hex/windows/calc
+$ make gocalc SC=local/sc/windows/calc
 $ make GOOS=windows
 ```
 

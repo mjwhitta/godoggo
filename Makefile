@@ -3,6 +3,7 @@ CS := 1
 SC :=
 
 -include gomk/main.mk
+-include local/Makefile
 
 go%:
 	@go run ./tools/generator.go "$(BS)" "$(CS)" "$@" "$(SC)"

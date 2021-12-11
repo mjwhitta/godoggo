@@ -6,32 +6,35 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"gitlab.com/mjwhitta/errors"
 )
 
 func copyFile(from string, to string) error {
-	var b []byte
 	var e error
-	var f *os.File
+	var src *os.File
+	var dst *os.File
 
-	// Read from file
-	if b, e = ioutil.ReadFile(from); e != nil {
-		return e
+	// Open src file
+	if src, e = os.Open(from); e != nil {
+		return errors.Newf("failed to open %s: %w", from, e)
 	}
 
-	// Create to file
-	if f, e = os.Create(to); e != nil {
-		return e
+	// Create dst file
+	if dst, e = os.Create(to); e != nil {
+		return errors.Newf("failed to create %s: %w", to, e)
 	}
 
 	// Copy contents
-	if _, e = f.Write(b); e != nil {
-		return e
+	if _, e = io.Copy(dst, src); e != nil {
+		return errors.Newf("failed to copy contents: %w", e)
 	}
 
 	return nil
@@ -92,7 +95,7 @@ func main() {
 
 	// Validate file exists
 	if _, e = os.Stat(scFile); (e != nil) && os.IsNotExist(e) {
-		os.Exit(2)
+		panic(errors.Newf("file %s not found", scFile))
 	} else if e != nil {
 		panic(e)
 	}
@@ -108,7 +111,7 @@ func main() {
 
 	// Read scFile
 	if b, e = ioutil.ReadFile(scFile); e != nil {
-		panic(e)
+		panic(errors.Newf("failed to read %s: %w", scFile, e))
 	}
 
 	// Get hex string ignoring comments
@@ -125,7 +128,7 @@ func main() {
 
 	// Decode hex to []byte
 	if sc, e = hex.DecodeString(hexsc); e != nil {
-		panic(e)
+		panic(errors.Newf("failed to decode hex: %w", e))
 	}
 
 	// Gzip the bytes
@@ -150,7 +153,7 @@ func nextFile(
 	// Close file
 	if f != nil {
 		if e = f.Close(); e != nil {
-			return nil, e
+			return nil, errors.Newf("failed to close file: %w", e)
 		}
 	}
 
@@ -161,12 +164,11 @@ func nextFile(
 	// Get new filename
 	fs = "%0" + strconv.Itoa(len(strconv.Itoa(blocks))) + "d"
 	fn = fmt.Sprintf(fs, (block/blocksize)+1) + ".go"
+	fn = filepath.Join(path, fn)
 
 	// Open new file
-	if f, e = os.Create(filepath.Join(path, fn)); e != nil {
-		return nil, e
-	} else if f == nil {
-		return nil, fmt.Errorf("godoggo: failed to open file")
+	if f, e = os.Create(fn); e != nil {
+		return nil, errors.Newf("failed to create %s: %w", fn, e)
 	}
 
 	return f, nil
@@ -187,10 +189,18 @@ func writeFiles(name string, sc []byte) error {
 
 	// Get block and chunk size
 	if blocksize, e = strconv.Atoi(flag.Arg(0)); e != nil {
-		return e
+		return errors.Newf(
+			"failed to parse %s as blocksize: %w",
+			flag.Arg(0),
+			e,
+		)
 	}
 	if chunksize, e = strconv.Atoi(flag.Arg(1)); e != nil {
-		return e
+		return errors.Newf(
+			"failed to parse %s as chunksize: %w",
+			flag.Arg(1),
+			e,
+		)
 	}
 
 	// Determine number of blocks
@@ -263,11 +273,11 @@ func zipUp(b []byte) ([]byte, error) {
 	var g *gzip.Writer = gzip.NewWriter(&buf)
 
 	if _, e = g.Write(b); e != nil {
-		return []byte{}, e
+		return []byte{}, errors.Newf("failed to write gzip: %w", e)
 	}
 
 	if e = g.Close(); e != nil {
-		return []byte{}, e
+		return []byte{}, errors.Newf("failed to close gzip: %w", e)
 	}
 
 	return buf.Bytes(), nil

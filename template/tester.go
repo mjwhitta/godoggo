@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+
+	"gitlab.com/mjwhitta/errors"
 )
 
 func init() {
@@ -25,12 +27,12 @@ func init() {
 
 	// Uncompress
 	if g, e = gzip.NewReader(bytes.NewReader(sc)); e != nil {
-		return
+		panic(errors.Newf("failed to unzip: %w", e))
 	}
 	defer g.Close()
 
 	if sc, e = ioutil.ReadAll(g); e != nil {
-		return
+		panic(errors.Newf("failed to unzip: %w", e))
 	}
 
 	// Print out the shellcode for verification

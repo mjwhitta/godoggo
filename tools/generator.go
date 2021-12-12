@@ -97,6 +97,11 @@ func main() {
 	if _, e = os.Stat(scFile); (e != nil) && os.IsNotExist(e) {
 		panic(errors.Newf("file %s not found", scFile))
 	} else if e != nil {
+		e = errors.Newf(
+			"failed to get file info for %s: %w",
+			scFile,
+			e,
+		)
 		panic(e)
 	}
 

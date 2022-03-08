@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	gitlab.com/mjwhitta/errors v1.0.0
-	gitlab.com/mjwhitta/runsc v1.3.1
+	gitlab.com/mjwhitta/runsc v1.3.2
 )
 
 require (

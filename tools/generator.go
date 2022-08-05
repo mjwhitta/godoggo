@@ -7,7 +7,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -115,7 +114,7 @@ func main() {
 	}
 
 	// Read scFile
-	if b, e = ioutil.ReadFile(scFile); e != nil {
+	if b, e = os.ReadFile(scFile); e != nil {
 		panic(errors.Newf("failed to read %s: %w", scFile, e))
 	}
 

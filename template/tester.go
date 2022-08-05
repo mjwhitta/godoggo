@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 
 	"gitlab.com/mjwhitta/errors"
@@ -31,7 +31,7 @@ func init() {
 	}
 	defer g.Close()
 
-	if sc, e = ioutil.ReadAll(g); e != nil {
+	if sc, e = io.ReadAll(g); e != nil {
 		panic(errors.Newf("failed to unzip: %w", e))
 	}
 

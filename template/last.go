@@ -6,7 +6,7 @@ package main
 import (
 	"bytes"
 	"compress/gzip"
-	"io/ioutil"
+	"io"
 
 	"gitlab.com/mjwhitta/runsc"
 )
@@ -26,7 +26,7 @@ func init() {
 	}
 	defer g.Close()
 
-	if sc, e = ioutil.ReadAll(g); e != nil {
+	if sc, e = io.ReadAll(g); e != nil {
 		return
 	}
 

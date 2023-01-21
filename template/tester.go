@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	"gitlab.com/mjwhitta/errors"
+	"github.com/mjwhitta/errors"
 )
 
 func init() {

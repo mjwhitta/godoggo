@@ -2,7 +2,7 @@
 
 <a href="https://www.buymeacoffee.com/mjwhitta">🍪 Buy me a cookie</a>
 
-[![Go Report Card](https://goreportcard.com/badge/gitlab.com/mjwhitta/godoggo)](https://goreportcard.com/report/gitlab.com/mjwhitta/godoggo)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mjwhitta/godoggo)](https://goreportcard.com/report/github.com/mjwhitta/godoggo)
 
 This dog's byte is much worse than its bark.
 
@@ -24,7 +24,7 @@ Target must start with `go`. This is a limitation of the current
 Makefile but can be changed after your code has been generated.
 
 ```
-$ git clone https://gitlab.com/mjwhitta/godogo.git
+$ git clone https://github.com/mjwhitta/godogo.git
 $ cd godoggo
 $ git submodule update --init
 $ make gocalc SC=local/sc/windows/calc
@@ -47,4 +47,4 @@ time. `make superclean` is your friend.
 
 ## Links
 
-- [Source](https://gitlab.com/mjwhitta/godoggo)
+- [Source](https://github.com/mjwhitta/godoggo)

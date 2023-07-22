@@ -1,8 +1,8 @@
-github.com/mjwhitta/errors v1.0.1 h1:f12gpCh23cfzXUgtlZBWGs387ZJeEeOemv7hLSvBAx0=
-github.com/mjwhitta/errors v1.0.1/go.mod h1:VxHM8bLMPVqkvHiYQq4Nq4sjNqPjUtKLhSF2I0wve5U=
-github.com/mjwhitta/hilighter v1.11.2 h1:RKl9BeBjHWNacbQuR3F4yzfUEr1krLwjgFsDI9ZuyZo=
-github.com/mjwhitta/hilighter v1.11.2/go.mod h1:0Yzfon7qT8oTfofbA+SGaB21GQshjlOgwDEF6xuCyVc=
-github.com/mjwhitta/runsc v1.3.5 h1:HDHtaCxzmUGF1buSJWsaIjAeRpm7BiImXxARUMevDE0=
-github.com/mjwhitta/runsc v1.3.5/go.mod h1:/IQY8Hly2XncSJjWV0BKmxHi+dmbjlYDrlY5/rxo5AI=
-golang.org/x/sys v0.4.0 h1:Zr2JFtRQNX3BCZ8YtxRE9hNJYC8J6I1MVbMg6owUp18=
-golang.org/x/sys v0.4.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+github.com/mjwhitta/errors v1.0.2 h1:5QmN4kKfFwYiSsdASDmoi3ie7HesdU7pNDqlhXE9nuU=
+github.com/mjwhitta/errors v1.0.2/go.mod h1:VxHM8bLMPVqkvHiYQq4Nq4sjNqPjUtKLhSF2I0wve5U=
+github.com/mjwhitta/runsc v1.4.0 h1:UDwMIHu9tuTtNWphbikiyRLErtPH6yVJnnPUO1qWV5c=
+github.com/mjwhitta/runsc v1.4.0/go.mod h1:1xk9N+XigsDHmCkmhr+BxroLpCM5aE4QlOL1x4EtB18=
+github.com/mjwhitta/win v0.12.1 h1:JotNBIDIJ5uamotwwdWPiW/uiccnoO6nSodaKKVFlYk=
+github.com/mjwhitta/win v0.12.1/go.mod h1:8pxUv5r+2ekZi1zwbhbbtixWJ6pMMpA2QnEkdikd72s=
+golang.org/x/sys v0.10.0 h1:SqMFp9UcQJZa+pmYuAKjd9xq1f0j5rLcDIk0mj4qAsA=
+golang.org/x/sys v0.10.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

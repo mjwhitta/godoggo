@@ -10,8 +10,8 @@ go%:
 	@go fmt ./...
 
 superclean: clean
-ifeq ($(unameS),Windows)
+ifeq ($(unameS),windows)
 	$(foreach d,$(wildcard cmd/*),$(shell powershell -c Remove-Item -Force -Recurse $d))
 else
-	@rm -fr ./cmd/*
+	@rm -f -r ./cmd/*
 endif

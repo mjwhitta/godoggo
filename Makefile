@@ -11,7 +11,7 @@ go%:
 
 superclean: clean
 ifeq ($(unameS),windows)
-	$(foreach d,$(wildcard cmd/*),$(shell powershell -c Remove-Item -Force -Recurse $d))
+	@$(foreach d,$(wildcard cmd/*),remove-item -force -recurse $d;)
 else
 	@rm -f -r ./cmd/*
 endif

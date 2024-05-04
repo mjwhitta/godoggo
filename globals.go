@@ -1,4 +1,4 @@
 package godoggo
 
 // Version is the package version
-const Version string = "1.4.11"
+const Version string = "1.4.12"

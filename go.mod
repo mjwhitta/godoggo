@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/mjwhitta/errors v1.0.3
-	github.com/mjwhitta/runsc v1.5.0
+	github.com/mjwhitta/runsc v1.5.1
 )
 
 require (

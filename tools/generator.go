@@ -106,7 +106,7 @@ func main() {
 
 	// Make cmd dir
 	os.RemoveAll(filepath.Join("cmd", name))
-	os.MkdirAll(filepath.Join("cmd", name), os.ModePerm)
+	_ = os.MkdirAll(filepath.Join("cmd", name), os.ModePerm)
 
 	// Copy template files
 	if e = copyTemplateFiles(name); e != nil {
@@ -140,7 +140,7 @@ func main() {
 		panic(e)
 	}
 
-	writeFiles(name, sc)
+	_ = writeFiles(name, sc)
 }
 
 func nextFile(
@@ -222,7 +222,7 @@ func writeFiles(name string, sc []byte) error {
 
 			if f != nil {
 				// Write footer
-				f.WriteString(footer)
+				_, _ = f.WriteString(footer)
 			}
 
 			// Get next file
@@ -238,7 +238,7 @@ func writeFiles(name string, sc []byte) error {
 			}
 
 			// Write header
-			f.WriteString(header)
+			_, _ = f.WriteString(header)
 		} else if (i % blocksize % chunksize) == 0 {
 			// Write chunk
 			b = writeSC(b, f)
@@ -249,7 +249,7 @@ func writeFiles(name string, sc []byte) error {
 
 	// Write partial chunk
 	writeSC(b, f)
-	f.WriteString(footer)
+	_, _ = f.WriteString(footer)
 	if _, e = nextFile(f, 0, 0, 0, ""); e != nil {
 		return e
 	}
@@ -259,13 +259,13 @@ func writeFiles(name string, sc []byte) error {
 
 func writeSC(b []byte, f *os.File) []byte {
 	if len(b) > 0 {
-		f.WriteString("\tsc = append(sc, ")
+		_, _ = f.WriteString("\tsc = append(sc, ")
 
 		for _, c := range b {
-			f.WriteString(fmt.Sprintf("%#x,", c))
+			_, _ = f.WriteString(fmt.Sprintf("%#x,", c))
 		}
 
-		f.WriteString(")\n")
+		_, _ = f.WriteString(")\n")
 	}
 
 	return []byte{}

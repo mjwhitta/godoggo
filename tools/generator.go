@@ -40,6 +40,7 @@ func copyFile(from string, to string) error {
 }
 
 func copyTemplateFiles(name string) error {
+	var b []byte
 	var e error
 
 	e = copyFile(
@@ -61,6 +62,32 @@ func copyTemplateFiles(name string) error {
 	e = copyFile(
 		filepath.Join("template", "last.go"),
 		filepath.Join("cmd", name, "z.go"),
+	)
+	if e != nil {
+		return e
+	}
+
+	e = os.WriteFile(
+		filepath.Join("cmd", name, "versioninfo.go"),
+		[]byte(""+
+			"package main\n\n"+
+			"//go:generate goversioninfo --platform-specific\n",
+		),
+		0o600,
+	)
+	if e != nil {
+		return e
+	}
+
+	b, e = os.ReadFile(filepath.Join("template", "versioninfo.json"))
+	if e != nil {
+		return e
+	}
+
+	e = os.WriteFile(
+		filepath.Join("cmd", name, "versioninfo.json"),
+		bytes.ReplaceAll(b, []byte("TODO"), []byte(name)),
+		0o600,
 	)
 	if e != nil {
 		return e

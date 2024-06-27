@@ -40,7 +40,7 @@ Use `BS` and `CS` to adjust splitting of shellcode.
 $ make gobeacon BS=1024 SC=/path/to/beacon
 $ make gostageless BS=4096 CS=512 SC=/path/to/beacon_stageless
 $ make gokatz BS=1024 SC=/path/to/mimikatz
-$ make GOOS=windows
+$ make GOOS=windows cgo
 ```
 
 **Note:** Compiling larger shellcode can take a considerable amount of

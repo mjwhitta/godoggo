@@ -1,3 +1,4 @@
+//nolint:wrapcheck // This is just a dumb code generator
 package main
 
 import (
@@ -16,18 +17,20 @@ import (
 	"github.com/mjwhitta/errors"
 )
 
+var reWhiteSpace *regexp.Regexp = regexp.MustCompile(`\s+`)
+
 func copyFile(from string, to string) error {
 	var e error
 	var src *os.File
 	var dst *os.File
 
 	// Open src file
-	if src, e = os.Open(from); e != nil {
+	if src, e = os.Open(filepath.Clean(from)); e != nil {
 		return errors.Newf("failed to open %s: %w", from, e)
 	}
 
 	// Create dst file
-	if dst, e = os.Create(to); e != nil {
+	if dst, e = os.Create(filepath.Clean(to)); e != nil {
 		return errors.Newf("failed to create %s: %w", to, e)
 	}
 
@@ -73,7 +76,7 @@ func copyTemplateFiles(name string) error {
 			"package main\n\n"+
 			"//go:generate goversioninfo --platform-specific\n",
 		),
-		0o600,
+		0o600, //nolint:mnd // u=rw,go=-
 	)
 	if e != nil {
 		return e
@@ -87,7 +90,7 @@ func copyTemplateFiles(name string) error {
 	e = os.WriteFile(
 		filepath.Join("cmd", name, "versioninfo.json"),
 		bytes.ReplaceAll(b, []byte("TODO"), []byte(name)),
-		0o600,
+		0o600, //nolint:mnd // u=rw,go=-
 	)
 	if e != nil {
 		return e
@@ -101,7 +104,7 @@ func init() {
 	flag.Parse()
 
 	// Exit if wrong number of cli args
-	if flag.NArg() != 4 {
+	if flag.NArg() != 4 { //nolint:mnd // Need 4 cli args
 		os.Exit(1)
 	}
 }
@@ -109,15 +112,14 @@ func init() {
 func main() {
 	var b []byte
 	var e error
-	var hexsc string
 	var name string
-	var r *regexp.Regexp
+	var sb strings.Builder
 	var sc []byte
 	var scFile string
 
 	// Store cli args
-	name = flag.Arg(2)
-	scFile = flag.Arg(3)
+	name = flag.Arg(2)   //nolint:mnd // Third arg
+	scFile = flag.Arg(3) //nolint:mnd // Fourth arg
 
 	// Validate file exists
 	if _, e = os.Stat(scFile); (e != nil) && os.IsNotExist(e) {
@@ -132,8 +134,9 @@ func main() {
 	}
 
 	// Make cmd dir
-	os.RemoveAll(filepath.Join("cmd", name))
-	_ = os.MkdirAll(filepath.Join("cmd", name), os.ModePerm)
+	_ = os.RemoveAll(filepath.Join("cmd", name))
+	//nolint:mnd // u=rwx,go=-
+	_ = os.MkdirAll(filepath.Join("cmd", name), 0o700)
 
 	// Copy template files
 	if e = copyTemplateFiles(name); e != nil {
@@ -141,12 +144,11 @@ func main() {
 	}
 
 	// Read scFile
-	if b, e = os.ReadFile(scFile); e != nil {
+	if b, e = os.ReadFile(filepath.Clean(scFile)); e != nil {
 		panic(errors.Newf("failed to read %s: %w", scFile, e))
 	}
 
 	// Get hex string ignoring comments
-	r = regexp.MustCompile(`\s+`)
 	for _, line := range strings.Split(string(b), "\n") {
 		if strings.HasPrefix(strings.TrimSpace(line), "#") {
 			continue
@@ -154,11 +156,11 @@ func main() {
 			continue
 		}
 
-		hexsc += r.ReplaceAllString(line, "")
+		sb.WriteString(reWhiteSpace.ReplaceAllString(line, ""))
 	}
 
 	// Decode hex to []byte
-	if sc, e = hex.DecodeString(hexsc); e != nil {
+	if sc, e = hex.DecodeString(sb.String()); e != nil {
 		panic(errors.Newf("failed to decode hex: %w", e))
 	}
 
@@ -189,6 +191,7 @@ func nextFile(
 	}
 
 	if blocks == 0 {
+		//nolint:nilnil // No next file
 		return nil, nil
 	}
 
@@ -198,7 +201,7 @@ func nextFile(
 	fn = filepath.Join(path, fn)
 
 	// Open new file
-	if f, e = os.Create(fn); e != nil {
+	if f, e = os.Create(filepath.Clean(fn)); e != nil {
 		return nil, errors.Newf("failed to create %s: %w", fn, e)
 	}
 
@@ -226,6 +229,7 @@ func writeFiles(name string, sc []byte) error {
 			e,
 		)
 	}
+
 	if chunksize, e = strconv.Atoi(flag.Arg(1)); e != nil {
 		return errors.Newf(
 			"failed to parse %s as chunksize: %w",
@@ -242,6 +246,7 @@ func writeFiles(name string, sc []byte) error {
 
 	// Create numerous go files
 	b = []byte{}
+
 	for i, c := range sc {
 		if (i % blocksize) == 0 {
 			// Write partial chunk
@@ -277,6 +282,7 @@ func writeFiles(name string, sc []byte) error {
 	// Write partial chunk
 	writeSC(b, f)
 	_, _ = f.WriteString(footer)
+
 	if _, e = nextFile(f, 0, 0, 0, ""); e != nil {
 		return e
 	}
@@ -289,7 +295,7 @@ func writeSC(b []byte, f *os.File) []byte {
 		_, _ = f.WriteString("\tsc = append(sc, ")
 
 		for _, c := range b {
-			_, _ = f.WriteString(fmt.Sprintf("%#x,", c))
+			_, _ = fmt.Fprintf(f, "%#x,", c)
 		}
 
 		_, _ = f.WriteString(")\n")

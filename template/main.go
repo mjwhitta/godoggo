@@ -4,6 +4,6 @@ import "time"
 
 func main() {
 	for {
-		time.Sleep(time.Second)
+		time.Sleep(time.Hour)
 	}
 }

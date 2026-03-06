@@ -8,6 +8,6 @@ require (
 )
 
 require (
-	github.com/mjwhitta/win v0.31.6 // indirect
-	golang.org/x/sys v0.38.0 // indirect
+	github.com/mjwhitta/win v0.31.7 // indirect
+	golang.org/x/sys v0.41.0 // indirect
 )

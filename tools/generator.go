@@ -295,6 +295,7 @@ func writeSC(b []byte, f *os.File) []byte {
 		_, _ = f.WriteString("\tsc = append(sc, ")
 
 		for _, c := range b {
+			//nolint:gosec // G705 - huh? this is shellcode. xss?
 			_, _ = fmt.Fprintf(f, "%#x,", c)
 		}
 

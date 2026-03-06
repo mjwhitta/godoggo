@@ -1,7 +1,7 @@
 github.com/mjwhitta/errors v1.0.7 h1:gj4MNIc/DiZMZ7B0+Tz/0ExhpwurzOmuO3THTJZGkHw=
 github.com/mjwhitta/errors v1.0.7/go.mod h1:NoDi7MJLuXJuf69DeHiQMveI72TcKJdEAGVb2JJOVOs=
-github.com/mjwhitta/runsc v1.6.8 h1:BrQYzjw9bMbbFOOO7ACZ/3Za7azok8vf3D0j8CmAaw0=
-github.com/mjwhitta/runsc v1.6.8/go.mod h1:/QQBYbBPuZNDZtxbR3uUv48e5YU3KlnYxfm31UZNT7k=
+github.com/mjwhitta/runsc v1.6.9 h1:KwK1mykPAbw4mrT/TZFWsxXlb5P8PLp0bBLQiHXOW8s=
+github.com/mjwhitta/runsc v1.6.9/go.mod h1:jfnMgJ8VYeD9SvfQBdnsPneucrz2UQc1l+Ssh6Su19M=
 github.com/mjwhitta/win v0.31.7 h1:uhV0r7A3QA/mrHy4wWYHPGyGD3xoUZio4zplOMeLUwY=
 github.com/mjwhitta/win v0.31.7/go.mod h1:60kRb8YP5o5jWmVrfQA0GMy3x7jGUkj6yg5LFsLzGPM=
 golang.org/x/sys v0.41.0 h1:Ivj+2Cp/ylzLiEU89QhWblYnOE9zerudt9Ftecq2C6k=

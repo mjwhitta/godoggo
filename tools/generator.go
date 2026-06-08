@@ -87,6 +87,7 @@ func copyTemplateFiles(name string) error {
 		return e
 	}
 
+	//nolint:gosec // G703 name cannot contain slashes, see main()
 	e = os.WriteFile(
 		filepath.Join("cmd", name, "versioninfo.json"),
 		bytes.ReplaceAll(b, []byte("TODO"), []byte(name)),
@@ -120,6 +121,10 @@ func main() {
 	// Store cli args
 	name = flag.Arg(2)   //nolint:mnd // Third arg
 	scFile = flag.Arg(3) //nolint:mnd // Fourth arg
+
+	if name = filepath.ToSlash(name); strings.Contains(name, "/") {
+		panic(errors.New("name cannot contain slashes"))
+	}
 
 	// Validate file exists
 	if _, e = os.Stat(scFile); (e != nil) && os.IsNotExist(e) {
@@ -295,7 +300,6 @@ func writeSC(b []byte, f *os.File) []byte {
 		_, _ = f.WriteString("\tsc = append(sc, ")
 
 		for _, c := range b {
-			//nolint:gosec // G705 - huh? this is shellcode. xss?
 			_, _ = fmt.Fprintf(f, "%#x,", c)
 		}
 

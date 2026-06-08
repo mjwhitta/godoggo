@@ -1,13 +1,13 @@
 module github.com/mjwhitta/godoggo
 
-go 1.24.0
+go 1.25.0
 
 require (
-	github.com/mjwhitta/errors v1.0.7
-	github.com/mjwhitta/runsc v1.6.9
+	github.com/mjwhitta/errors v1.0.8
+	github.com/mjwhitta/runsc v1.6.10
 )
 
 require (
-	github.com/mjwhitta/win v0.31.7 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	github.com/mjwhitta/win v0.31.10 // indirect
+	golang.org/x/sys v0.46.0 // indirect
 )
